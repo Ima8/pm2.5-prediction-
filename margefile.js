@@ -64,7 +64,7 @@ function writeToFile(fd, val) {
 }
 async function main() {
   let count = 0
-  fd = fs.openSync('data.txt', 'a');
+  fd = fs.openSync('data.csv', 'a');
   let listOfFiles = await getFileNameInFolder()
   for (file of listOfFiles) {
     const pathFile = path.join(directoryPath, file);
