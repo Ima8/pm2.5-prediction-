@@ -63,6 +63,7 @@ function writeToFile(fd, val) {
 
 }
 async function main() {
+  let count = 0
   fd = fs.openSync('data.txt', 'a');
   let listOfFiles = await getFileNameInFolder()
   for (file of listOfFiles) {
@@ -71,17 +72,26 @@ async function main() {
     const data = res.split('\n')
     for (let i = 0; i < data.length; i++) {
       let row = data[i]
+      
       const col = row.split(',')
-      textPM25 = convertPM25(col[5])
-      //console.log(textPM25);
-      if (i == 0) {
-        newRow = ['"Air Quality"', ...col.splice(0, 5), ...col.splice(1)]
-      } else {
-        newRow = [textPM25, ...col.splice(0, 5), ...col.splice(1)]
+      if (col[5]) {
+        if (count != 0 && col[0] == '"No"') {
+          continue;
+        }
+        textPM25 = convertPM25(col[5])
+        //console.log(textPM25);
+        if (count == 0) {
+          newRow = ['"Air Quality"', ...col.splice(0, 5), ...col.splice(1)]
+          count++
+        } else {
+          newRow = [textPM25, ...col.splice(0, 5), ...col.splice(1)]
+        }
+        newRow = newRow.join()
+        newRow = newRow + "\n"
+        writeToFile(fd, newRow)
+        count++
       }
-      newRow = newRow.join()
-      newRow = newRow+"\n"
-      writeToFile(fd,newRow)
+
     }
   }
   console.log(listOfFiles);
