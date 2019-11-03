@@ -36,7 +36,10 @@ const readFile = (path, opts = 'utf8') =>
   })
 
 function convertPM25(val) {
-  switch (val) {
+  val = parseInt(val)
+  //console.log(val);
+  
+  switch (true) {
     case val >= 250.5:
       return '"Hazardous"';
     case val >= 150.5:
